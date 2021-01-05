@@ -1,6 +1,6 @@
 # Cache::PostgresStore
 
-[![Build Status](https://travis-ci.org/mamantoha/postgres_cache.svg?branch=main)](https://travis-ci.org/mamantoha/postgres_cache)
+[![Build Status](https://travis-ci.org/crystal-cache/postgres_cache.svg?branch=main)](https://travis-ci.org/crystal-cache/postgres_cache)
 
 A [cache](https://github.com/mamantoha/cache) store implementation which stores everything in the Postgres database,
 using [crystal-pg](https://github.com/will/crystal-pg) as the backend.
@@ -14,7 +14,7 @@ using [crystal-pg](https://github.com/will/crystal-pg) as the backend.
    ```yaml
    dependencies:
      postgres_cache:
-       github: mamantoha/postgres_cache
+       github: crystal-cache/postgres_cache
    ```
 
 2. Run `shards install`
@@ -47,7 +47,7 @@ cache.read("foo") # => "bar"
 
 ## Contributing
 
-1. Fork it (<https://github.com/mamantoha/postgres_cache/fork>)
+1. Fork it (<https://github.com/crystal-cache/postgres_cache/fork>)
 2. Create your feature branch (`git checkout -b my-new-feature`)
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
