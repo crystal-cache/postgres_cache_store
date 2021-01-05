@@ -1,6 +1,15 @@
 language: crystal
 
-# Uncomment the following if you'd like Travis to run specs and check code formatting
-# script:
-#   - crystal spec
-#   - crystal tool format --check
+services:
+  - postgresql
+
+crystal:
+  - latest
+  - nightly
+
+before_script:
+  - psql -c 'create database postgres_store_test;' -U postgres
+
+script:
+  - crystal spec
+  - crystal tool format --check
