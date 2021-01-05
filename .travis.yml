@@ -3,10 +3,6 @@ language: crystal
 services:
   - postgresql
 
-crystal:
-  - latest
-  - nightly
-
 before_script:
   - psql -c 'create database postgres_store_test;' -U postgres
 
