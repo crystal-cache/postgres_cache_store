@@ -15,4 +15,8 @@ dependencies:
     github: will/crystal-pg
     branch: master
 
+development_dependencies:
+  ameba:
+    github: crystal-ameba/ameba
+
 license: MIT

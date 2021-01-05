@@ -13,3 +13,4 @@ before_script:
 script:
   - crystal spec
   - crystal tool format --check
+  - ./bin/ameba

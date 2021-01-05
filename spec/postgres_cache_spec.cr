@@ -24,7 +24,6 @@ describe Cache::PostgresStore do
     store.should be_a(Cache::Store(String, String))
   end
 
-
   it "write to cache first time" do
     store = Cache::PostgresStore(String, String).new(12.hours, pg)
 
