@@ -1,5 +1,7 @@
 # Cache::PostgresStore
 
+[![Build Status](https://travis-ci.org/mamantoha/postgres_cache.svg?branch=main)](https://travis-ci.org/mamantoha/postgres_cache)
+
 A [cache](https://github.com/mamantoha/cache) store implementation which stores everything in the Postgres database,
 using [crystal-pg](https://github.com/will/crystal-pg) as the backend.
 
