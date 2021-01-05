@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/crystal-cache/postgres_cache.svg?branch=main)](https://travis-ci.org/crystal-cache/postgres_cache)
 
-A [cache](https://github.com/mamantoha/cache) store implementation which stores everything in the Postgres database,
+A [cache](https://github.com/crystal-cache/cache) store implementation which stores everything in the Postgres database,
 using [crystal-pg](https://github.com/will/crystal-pg) as the backend.
 
 `Cache::PostgresStore` is a Crystal cache backed by a Postgres UNLOGGED table and text column.
