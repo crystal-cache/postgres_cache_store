@@ -1,2 +1,2 @@
 require "spec"
-require "../src/postgres_cache"
+require "../src/postgres_cache_store"

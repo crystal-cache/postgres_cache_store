@@ -1,12 +1,12 @@
-# Cache::PostgresStore
+# Cache::PostgresCacheStore
 
-[![Build Status](https://travis-ci.org/crystal-cache/postgres_cache.svg?branch=main)](https://travis-ci.org/crystal-cache/postgres_cache)
-[![GitHub release](https://img.shields.io/github/release/crystal-cache/postgres_cache.svg)](https://github.com/crystal-cache/postgres_cache/releases)
+[![Build Status](https://travis-ci.org/crystal-cache/postgres_cache_store.svg?branch=main)](https://travis-ci.org/crystal-cache/postgres_cache_store)
+[![GitHub release](https://img.shields.io/github/release/crystal-cache/postgres_cache_store.svg)](https://github.com/crystal-cache/postgres_cache_store/releases)
 
 A [cache](https://github.com/crystal-cache/cache) store implementation which stores everything in the Postgres database,
 using [crystal-pg](https://github.com/will/crystal-pg) as the backend.
 
-`Cache::PostgresStore` is a Crystal cache backed by a Postgres UNLOGGED table and text column.
+`Cache::PostgresCacheStore` is a Crystal cache backed by a Postgres UNLOGGED table and text column.
 
 ## Installation
 
@@ -14,8 +14,8 @@ using [crystal-pg](https://github.com/will/crystal-pg) as the backend.
 
    ```yaml
    dependencies:
-     postgres_cache:
-       github: crystal-cache/postgres_cache
+     postgres_cache_store:
+       github: crystal-cache/postgres_cache_store
    ```
 
 2. Run `shards install`
@@ -37,9 +37,9 @@ db = DB.open("postgres://postgres@localhost/cache_production")
 Open and use the new cache instance:
 
 ```crystal
-require "postgres_cache"
+require "postgres_cache_store"
 
-cache = Cache::PostgresStore(String, String).new(1.minute, db)
+cache = Cache::PostgresCacheStore(String, String).new(1.minute, db)
 
 cache.write("foo", "bar")
 
@@ -48,7 +48,7 @@ cache.read("foo") # => "bar"
 
 ## Contributing
 
-1. Fork it (<https://github.com/crystal-cache/postgres_cache/fork>)
+1. Fork it (<https://github.com/crystal-cache/postgres_cache_store/fork>)
 2. Create your feature branch (`git checkout -b my-new-feature`)
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)

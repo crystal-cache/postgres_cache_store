@@ -3,8 +3,8 @@ require "pg"
 
 module Cache
   # A cache store implementation which stores everything in the Postgres database
-  struct PostgresStore(K, V) < Store(K, V)
-    # Creates a new PostgresStore attached to the provided database.
+  struct PostgresCacheStore(K, V) < Store(K, V)
+    # Creates a new PostgresCacheStore attached to the provided database.
     #
     # `table_name` and `expires_in` are required for your connection.
     def initialize(@expires_in : Time::Span, @pg : DB::Database, @table_name = "cache_entries")
