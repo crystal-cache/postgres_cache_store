@@ -13,7 +13,7 @@ dependencies:
     version: ~> 0.12.0
   pg:
     github: will/crystal-pg
-    branch: master
+    version: ~> 0.23.0
 
 development_dependencies:
   ameba:
