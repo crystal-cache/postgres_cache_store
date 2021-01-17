@@ -1,6 +1,6 @@
 name: postgres_cache_store
 description: Cache::Store implementation backed by a database via crystal-pg.
-version: 0.2.2
+version: 0.2.3
 
 authors:
   - Anton Maminov <anton.maminov@gmail.com>
@@ -18,5 +18,6 @@ dependencies:
 development_dependencies:
   ameba:
     github: crystal-ameba/ameba
+    branch: develop
 
 license: MIT

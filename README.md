@@ -1,6 +1,6 @@
 # Cache::PostgresCacheStore
 
-[![Build Status](https://travis-ci.org/crystal-cache/postgres_cache_store.svg?branch=main)](https://travis-ci.org/crystal-cache/postgres_cache_store)
+![Crystal CI](https://github.com/crystal-cache/postgres_cache_store/workflows/Crystal%20CI/badge.svg)
 [![GitHub release](https://img.shields.io/github/release/crystal-cache/postgres_cache_store.svg)](https://github.com/crystal-cache/postgres_cache_store/releases)
 
 A [cache](https://github.com/crystal-cache/cache) store implementation which stores everything in the Postgres database,
