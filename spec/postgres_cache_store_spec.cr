@@ -151,8 +151,12 @@ describe Cache::PostgresCacheStore do
 end
 
 def pg
-  # psql -c 'CREATE DATABASE postgres_cache_store_test;' -U postgres
-  DB.open("postgres://postgres@localhost/postgres_cache_store_test")
+  postgres_user = ENV["POSTGRES_USER"]? || "postgres"
+  postgres_password = ENV["POSTGRES_PASSWORD"]? || ""
+  postgres_host = ENV["POSTGRES_HOST"]? || "localhost"
+  postgres_db = ENV["POSTGRES_DB"]? || "postgres"
+
+  DB.open("postgres://#{postgres_user}:#{postgres_password}@#{postgres_host}/#{postgres_db}")
 end
 
 def table_name
