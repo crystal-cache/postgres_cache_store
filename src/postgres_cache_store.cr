@@ -45,8 +45,9 @@ module Cache
     def delete(key : K) : Bool
       sql = "DELETE from #{@table_name} WHERE key = $1"
 
-      @pg.exec(sql, key)
-      true
+      result = @pg.exec(sql, key)
+
+      result.rows_affected.zero? ? false : true
     end
 
     def exists?(key : K) : Bool

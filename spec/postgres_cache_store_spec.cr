@@ -160,7 +160,7 @@ describe Cache::PostgresCacheStore do
       value.should eq("bar")
 
       result = store.delete("'foz' OR 1=1")
-      result.should eq(true)
+      result.should eq(false)
 
       value = store.read("foo")
       value.should eq("bar")
