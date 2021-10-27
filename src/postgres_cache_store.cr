@@ -12,21 +12,20 @@ module Cache
     end
 
     private def write_impl(key : K, value : V, *, expires_in = @expires_in)
-      @pg.exec(
-        <<-SQL
-          INSERT INTO #{@table_name} (key, value, expires_in, created_at)
-          VALUES ('#{key}', '#{value}', '#{expires_in}', '#{Time.utc}')
-          ON CONFLICT (key) DO UPDATE
-          SET value = EXCLUDED.value::text
-        SQL
-      )
+      sql = <<-SQL
+        INSERT INTO #{@table_name} (key, value, expires_in, created_at)
+        VALUES ($1, $2, $3, $4)
+        ON CONFLICT (key) DO UPDATE
+        SET value = EXCLUDED.value::text
+      SQL
+
+      @pg.exec(sql, key, value, expires_in, Time.utc)
     end
 
     private def read_impl(key : K)
-      rs = @pg.query_one?(
-        "SELECT value, created_at, expires_in FROM #{@table_name} WHERE key = '#{key}'",
-        as: {String, Time, PG::Interval}
-      )
+      sql = "SELECT value, created_at, expires_in FROM #{@table_name} WHERE key = $1"
+
+      rs = @pg.query_one?(sql, key, as: {String, Time, PG::Interval})
 
       return unless rs
 
@@ -44,15 +43,17 @@ module Cache
     end
 
     def delete(key : K) : Bool
-      @pg.exec("DELETE from #{@table_name} WHERE key = '#{key}'")
-      true
+      sql = "DELETE from #{@table_name} WHERE key = $1"
+
+      result = @pg.exec(sql, key)
+
+      result.rows_affected.zero? ? false : true
     end
 
     def exists?(key : K) : Bool
-      rs = @pg.query_one?(
-        "SELECT created_at, expires_in FROM #{@table_name} WHERE key = '#{key}'",
-        as: {Time, PG::Interval}
-      )
+      sql = "SELECT created_at, expires_in FROM #{@table_name} WHERE key = $1"
+
+      rs = @pg.query_one?(sql, key, as: {Time, PG::Interval})
 
       return false unless rs
 
@@ -64,29 +65,35 @@ module Cache
     end
 
     def clear
-      @pg.exec("TRUNCATE TABLE #{@table_name}")
+      sql = "TRUNCATE TABLE #{@table_name}"
+
+      @pg.exec(sql)
     end
 
     # Preemptively iterates through all stored keys and removes the ones which have expired.
     def cleanup
-      @pg.exec("DELETE FROM #{@table_name} WHERE created_at + expires_in < NOW()")
+      sql = "DELETE FROM #{@table_name} WHERE created_at + expires_in < NOW()"
+
+      @pg.exec(sql)
     end
 
     private def create_cache_table
-      @pg.exec(
-        <<-SQL
-          CREATE UNLOGGED TABLE #{@table_name} (
-            key text PRIMARY KEY,
-            value text,
-            expires_in interval NOT NULL,
-            created_at timestamp NOT NULL
-          )
-        SQL
-      )
+      sql = <<-SQL
+        CREATE UNLOGGED TABLE #{@table_name} (
+          key text PRIMARY KEY,
+          value text,
+          expires_in interval NOT NULL,
+          created_at timestamp NOT NULL
+        )
+      SQL
+
+      @pg.exec(sql)
     end
 
     private def cache_table_exists? : Bool
-      @pg.query_one?("SELECT 1 FROM pg_class WHERE pg_class.relname = '#{@table_name}'", as: Int32) == 1
+      sql = "SELECT 1 FROM pg_class WHERE pg_class.relname = '#{@table_name}'"
+
+      @pg.query_one?(sql, as: Int32) == 1
     end
   end
 end

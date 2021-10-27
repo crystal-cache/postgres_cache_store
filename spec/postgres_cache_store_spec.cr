@@ -135,6 +135,37 @@ describe Cache::PostgresCacheStore do
 
     store.exists?("foo").should eq(false)
   end
+
+  context "SQL Injection" do
+    it "read" do
+      store = Cache::PostgresCacheStore(String, String).new(12.hours, pg)
+      store.write("foo", "bar")
+
+      value = store.read("'foz' OR 1=1")
+      value.should eq(nil)
+    end
+
+    it "#exists?" do
+      store = Cache::PostgresCacheStore(String, String).new(12.hours, pg)
+
+      store.write("foo", "bar")
+
+      store.exists?("'foz' OR 1=1").should eq(false)
+    end
+
+    it "delete from cache" do
+      store = Cache::PostgresCacheStore(String, String).new(12.hours, pg)
+
+      value = store.fetch("foo") { "bar" }
+      value.should eq("bar")
+
+      result = store.delete("'foz' OR 1=1")
+      result.should eq(false)
+
+      value = store.read("foo")
+      value.should eq("bar")
+    end
+  end
 end
 
 def pg
