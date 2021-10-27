@@ -1,19 +1,6 @@
 require "./spec_helper"
 
 describe Cache::PostgresCacheStore do
-  before_each do
-    pg.exec(
-      <<-SQL
-        CREATE UNLOGGED TABLE #{table_name} (
-          key text PRIMARY KEY,
-          value text,
-          expires_in interval NOT NULL,
-          created_at timestamp NOT NULL
-        )
-      SQL
-    )
-  end
-
   after_each do
     pg.exec("DROP TABLE #{table_name}")
   end
