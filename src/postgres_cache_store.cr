@@ -16,7 +16,9 @@ module Cache
         INSERT INTO #{@table_name} (key, value, expires_in, created_at)
         VALUES ($1, $2, $3, $4)
         ON CONFLICT (key) DO UPDATE
-        SET value = EXCLUDED.value::text
+        SET value = EXCLUDED.value,
+            expires_in = EXCLUDED.expires_in,
+            created_at = EXCLUDED.created_at
       SQL
 
       @pg.exec(sql, key, value, expires_in, Time.utc)
