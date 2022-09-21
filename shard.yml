@@ -10,7 +10,8 @@ crystal: ">= 1.0.0"
 dependencies:
   cache:
     github: crystal-cache/cache
-    version: ">= 0.12.0"
+    # version: ">= 0.12.0"
+    branch: develop
   pg:
     github: will/crystal-pg
     version: ">= 0.23.0"

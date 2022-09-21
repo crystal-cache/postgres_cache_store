@@ -44,7 +44,7 @@ module Cache
       value
     end
 
-    def delete(key : K) : Bool
+    private def delete_impl(key : K) : Bool
       sql = "DELETE from #{@table_name} WHERE key = $1"
 
       result = @pg.exec(sql, key)
@@ -52,7 +52,7 @@ module Cache
       result.rows_affected.zero? ? false : true
     end
 
-    def exists?(key : K) : Bool
+    private def exists_impl(key : K) : Bool
       sql = "SELECT created_at, expires_in FROM #{@table_name} WHERE key = $1"
 
       rs = @pg.query_one?(sql, key, as: {Time, PG::Interval})
