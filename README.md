@@ -39,7 +39,7 @@ Open and use the new cache instance:
 ```crystal
 require "postgres_cache_store"
 
-cache = Cache::PostgresCacheStore(String, String).new(1.minute, db)
+cache = Cache::PostgresCacheStore(String).new(1.minute, db)
 
 cache.write("foo", "bar")
 
