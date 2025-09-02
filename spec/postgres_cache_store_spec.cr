@@ -6,20 +6,20 @@ describe Cache::PostgresCacheStore do
   end
 
   it "initialize" do
-    store = Cache::PostgresCacheStore(String, String).new(12.hours, pg)
+    store = Cache::PostgresCacheStore(String).new(12.hours, pg)
 
-    store.should be_a(Cache::Store(String, String))
+    store.should be_a(Cache::Store(String))
   end
 
   it "write to cache first time" do
-    store = Cache::PostgresCacheStore(String, String).new(12.hours, pg)
+    store = Cache::PostgresCacheStore(String).new(12.hours, pg)
 
     value = store.fetch("foo") { "bar" }
     value.should eq("bar")
   end
 
   it "fetch from cache" do
-    store = Cache::PostgresCacheStore(String, String).new(12.hours, pg)
+    store = Cache::PostgresCacheStore(String).new(12.hours, pg)
 
     value = store.fetch("foo") { "bar" }
     value.should eq("bar")
@@ -29,7 +29,7 @@ describe Cache::PostgresCacheStore do
   end
 
   it "don't fetch from cache if expired" do
-    store = Cache::PostgresCacheStore(String, String).new(1.seconds, pg)
+    store = Cache::PostgresCacheStore(String).new(1.seconds, pg)
 
     value = store.fetch("foo") { "bar" }
     value.should eq("bar")
@@ -41,7 +41,7 @@ describe Cache::PostgresCacheStore do
   end
 
   it "fetch with expires_in from cache" do
-    store = Cache::PostgresCacheStore(String, String).new(1.seconds, pg)
+    store = Cache::PostgresCacheStore(String).new(1.seconds, pg)
 
     value = store.fetch("foo", expires_in: 1.hours) { "bar" }
     value.should eq("bar")
@@ -53,7 +53,7 @@ describe Cache::PostgresCacheStore do
   end
 
   it "don't fetch with expires_in from cache if expires" do
-    store = Cache::PostgresCacheStore(String, String).new(12.hours, pg)
+    store = Cache::PostgresCacheStore(String).new(12.hours, pg)
 
     value = store.fetch("foo", expires_in: 1.seconds) { "bar" }
     value.should eq("bar")
@@ -65,7 +65,7 @@ describe Cache::PostgresCacheStore do
   end
 
   it "write" do
-    store = Cache::PostgresCacheStore(String, String).new(12.hours, pg)
+    store = Cache::PostgresCacheStore(String).new(12.hours, pg)
     store.write("foo", "bar", expires_in: 1.minute)
 
     value = store.fetch("foo") { "bar" }
@@ -73,7 +73,7 @@ describe Cache::PostgresCacheStore do
   end
 
   it "rewrite value" do
-    store = Cache::PostgresCacheStore(String, String).new(12.hours, pg)
+    store = Cache::PostgresCacheStore(String).new(12.hours, pg)
     store.write("foo", "bar", expires_in: 1.minute)
     store.write("foo", "baz", expires_in: 1.minute)
 
@@ -83,7 +83,7 @@ describe Cache::PostgresCacheStore do
   end
 
   it "read" do
-    store = Cache::PostgresCacheStore(String, String).new(12.hours, pg)
+    store = Cache::PostgresCacheStore(String).new(12.hours, pg)
     store.write("foo", "bar")
 
     value = store.read("foo")
@@ -91,7 +91,7 @@ describe Cache::PostgresCacheStore do
   end
 
   it "set a custom expires_in value for entry on write" do
-    store = Cache::PostgresCacheStore(String, String).new(12.hours, pg)
+    store = Cache::PostgresCacheStore(String).new(12.hours, pg)
     store.write("foo", "bar", expires_in: 1.second)
 
     sleep 2.seconds
@@ -101,7 +101,7 @@ describe Cache::PostgresCacheStore do
   end
 
   it "delete from cache" do
-    store = Cache::PostgresCacheStore(String, String).new(12.hours, pg)
+    store = Cache::PostgresCacheStore(String).new(12.hours, pg)
 
     value = store.fetch("foo") { "bar" }
     value.should eq("bar")
@@ -115,7 +115,7 @@ describe Cache::PostgresCacheStore do
   end
 
   it "deletes all items from the cache" do
-    store = Cache::PostgresCacheStore(String, String).new(12.hours, pg)
+    store = Cache::PostgresCacheStore(String).new(12.hours, pg)
 
     value = store.fetch("foo") { "bar" }
     value.should eq("bar")
@@ -128,7 +128,7 @@ describe Cache::PostgresCacheStore do
   end
 
   it "#exists?" do
-    store = Cache::PostgresCacheStore(String, String).new(12.hours, pg)
+    store = Cache::PostgresCacheStore(String).new(12.hours, pg)
 
     store.write("foo", "bar")
 
@@ -137,7 +137,7 @@ describe Cache::PostgresCacheStore do
   end
 
   it "#exists? expires" do
-    store = Cache::PostgresCacheStore(String, String).new(1.second, pg)
+    store = Cache::PostgresCacheStore(String).new(1.second, pg)
 
     store.write("foo", "bar")
 
@@ -148,7 +148,7 @@ describe Cache::PostgresCacheStore do
 
   context "SQL Injection" do
     it "read" do
-      store = Cache::PostgresCacheStore(String, String).new(12.hours, pg)
+      store = Cache::PostgresCacheStore(String).new(12.hours, pg)
       store.write("foo", "bar")
 
       value = store.read("'foz' OR 1=1")
@@ -156,7 +156,7 @@ describe Cache::PostgresCacheStore do
     end
 
     it "#exists?" do
-      store = Cache::PostgresCacheStore(String, String).new(12.hours, pg)
+      store = Cache::PostgresCacheStore(String).new(12.hours, pg)
 
       store.write("foo", "bar")
 
@@ -164,7 +164,7 @@ describe Cache::PostgresCacheStore do
     end
 
     it "delete from cache" do
-      store = Cache::PostgresCacheStore(String, String).new(12.hours, pg)
+      store = Cache::PostgresCacheStore(String).new(12.hours, pg)
 
       value = store.fetch("foo") { "bar" }
       value.should eq("bar")
