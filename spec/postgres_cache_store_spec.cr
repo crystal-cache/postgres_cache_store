@@ -146,6 +146,36 @@ describe Cache::PostgresCacheStore do
     store.exists?("foo").should be_false
   end
 
+  it "#cleanup deletes expired entries" do
+    store = Cache::PostgresCacheStore(String).new(12.hours, pg)
+
+    pg.exec(
+      "INSERT INTO #{table_name} (key, value, expires_in, created_at) VALUES ($1, $2, $3, NOW() - INTERVAL '2 seconds')",
+      "expired",
+      "bar",
+      1.second
+    )
+
+    store.cleanup
+
+    store.read("expired").should be_nil
+  end
+
+  it "#cleanup keeps fresh entries" do
+    store = Cache::PostgresCacheStore(String).new(12.hours, pg)
+
+    pg.exec(
+      "INSERT INTO #{table_name} (key, value, expires_in, created_at) VALUES ($1, $2, $3, NOW())",
+      "fresh",
+      "bar",
+      1.hour
+    )
+
+    store.cleanup
+
+    store.read("fresh").should eq("bar")
+  end
+
   context "SQL Injection" do
     it "read" do
       store = Cache::PostgresCacheStore(String).new(12.hours, pg)

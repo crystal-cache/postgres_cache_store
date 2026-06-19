@@ -74,7 +74,7 @@ module Cache
 
     # Preemptively iterates through all stored keys and removes the ones which have expired.
     def cleanup
-      sql = "DELETE FROM #{@table_name} WHERE created_at + expires_in < NOW()"
+      sql = "DELETE FROM #{@table_name} WHERE created_at + expires_in <= NOW()"
 
       @pg.exec(sql)
     end
