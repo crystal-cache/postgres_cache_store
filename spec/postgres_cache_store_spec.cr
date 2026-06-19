@@ -2,7 +2,8 @@ require "./spec_helper"
 
 describe Cache::PostgresCacheStore do
   after_each do
-    pg.exec("DROP TABLE #{table_name}")
+    pg.exec("DROP TABLE IF EXISTS #{table_name}")
+    pg.exec("DROP TABLE IF EXISTS #{custom_table_name}")
   end
 
   it "initialize" do
@@ -21,6 +22,38 @@ describe Cache::PostgresCacheStore do
     )
 
     column_type.should eq("timestamp with time zone")
+  end
+
+  it "initializes with a custom table name" do
+    store = Cache::PostgresCacheStore(String).new(12.hours, pg, custom_table_name)
+
+    store.write("foo", "bar")
+
+    store.read("foo").should eq("bar")
+  end
+
+  it "initializes with a schema-qualified table name" do
+    store = Cache::PostgresCacheStore(String).new(12.hours, pg, "public.#{custom_table_name}")
+
+    store.write("foo", "bar")
+
+    store.read("foo").should eq("bar")
+  end
+
+  it "rejects unsafe table names" do
+    unsafe_table_names = [
+      "",
+      "1cache_entries",
+      "cache-entries",
+      "public.cache.entries",
+      "cache_entries; DROP TABLE cache_entries",
+    ]
+
+    unsafe_table_names.each do |unsafe_table_name|
+      expect_raises(ArgumentError) do
+        Cache::PostgresCacheStore(String).new(12.hours, pg, unsafe_table_name)
+      end
+    end
   end
 
   it "write to cache first time" do
@@ -231,4 +264,8 @@ end
 
 def table_name
   "cache_entries"
+end
+
+def custom_table_name
+  "custom_cache_entries"
 end

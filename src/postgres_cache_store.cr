@@ -4,10 +4,16 @@ require "pg"
 module Cache
   # A cache store implementation which stores everything in the Postgres database
   struct PostgresCacheStore(V) < Store(V)
+    IDENTIFIER = /\A[a-z_][a-z0-9_]*\z/
+
+    @table_name : String
+
     # Creates a new PostgresCacheStore attached to the provided database.
     #
     # `table_name` and `expires_in` are required for your connection.
-    def initialize(@expires_in : Time::Span, @pg : DB::Database, @table_name = "cache_entries")
+    def initialize(@expires_in : Time::Span, @pg : DB::Database, table_name = "cache_entries")
+      @table_name = table_name_reference(table_name)
+
       create_cache_table unless cache_table_exists?
     end
 
@@ -93,9 +99,19 @@ module Cache
     end
 
     private def cache_table_exists? : Bool
-      sql = "SELECT 1 FROM pg_class WHERE pg_class.relname = '#{@table_name}'"
+      sql = "SELECT to_regclass($1) IS NOT NULL"
 
-      @pg.query_one?(sql, as: Int32) == 1
+      @pg.query_one(sql, @table_name, as: Bool)
+    end
+
+    private def table_name_reference(table_name : String) : String
+      identifiers = table_name.split(".")
+
+      unless identifiers.size.in?(1, 2) && identifiers.all?(&.matches?(IDENTIFIER))
+        raise ArgumentError.new("Invalid table name: #{table_name}")
+      end
+
+      identifiers.map { |identifier| %("#{identifier}") }.join(".")
     end
   end
 end
