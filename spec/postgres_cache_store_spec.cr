@@ -97,7 +97,7 @@ describe Cache::PostgresCacheStore do
     sleep 2.seconds
 
     value = store.read("foo")
-    value.should eq(nil)
+    value.should be_nil
   end
 
   it "delete from cache" do
@@ -107,10 +107,10 @@ describe Cache::PostgresCacheStore do
     value.should eq("bar")
 
     result = store.delete("foo")
-    result.should eq(true)
+    result.should be_true
 
     value = store.read("foo")
-    value.should eq(nil)
+    value.should be_nil
     store.keys.should eq(Set(String).new)
   end
 
@@ -123,7 +123,7 @@ describe Cache::PostgresCacheStore do
     store.clear
 
     value = store.read("foo")
-    value.should eq(nil)
+    value.should be_nil
     store.keys.should be_empty
   end
 
@@ -132,8 +132,8 @@ describe Cache::PostgresCacheStore do
 
     store.write("foo", "bar")
 
-    store.exists?("foo").should eq(true)
-    store.exists?("foz").should eq(false)
+    store.exists?("foo").should be_true
+    store.exists?("foz").should be_false
   end
 
   it "#exists? expires" do
@@ -143,7 +143,7 @@ describe Cache::PostgresCacheStore do
 
     sleep 2.seconds
 
-    store.exists?("foo").should eq(false)
+    store.exists?("foo").should be_false
   end
 
   context "SQL Injection" do
@@ -152,7 +152,7 @@ describe Cache::PostgresCacheStore do
       store.write("foo", "bar")
 
       value = store.read("'foz' OR 1=1")
-      value.should eq(nil)
+      value.should be_nil
     end
 
     it "#exists?" do
@@ -160,7 +160,7 @@ describe Cache::PostgresCacheStore do
 
       store.write("foo", "bar")
 
-      store.exists?("'foz' OR 1=1").should eq(false)
+      store.exists?("'foz' OR 1=1").should be_false
     end
 
     it "delete from cache" do
@@ -170,7 +170,7 @@ describe Cache::PostgresCacheStore do
       value.should eq("bar")
 
       result = store.delete("'foz' OR 1=1")
-      result.should eq(false)
+      result.should be_false
 
       value = store.read("foo")
       value.should eq("bar")

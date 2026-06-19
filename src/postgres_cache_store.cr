@@ -19,7 +19,7 @@ module Cache
         SET value = EXCLUDED.value,
             expires_in = EXCLUDED.expires_in,
             created_at = EXCLUDED.created_at
-      SQL
+        SQL
 
       @pg.exec(sql, key, value, expires_in, Time.utc)
     end
@@ -87,7 +87,7 @@ module Cache
           expires_in interval NOT NULL,
           created_at timestamp NOT NULL
         )
-      SQL
+        SQL
 
       @pg.exec(sql)
     end
