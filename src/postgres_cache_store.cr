@@ -85,7 +85,7 @@ module Cache
           key text PRIMARY KEY,
           value text,
           expires_in interval NOT NULL,
-          created_at timestamp NOT NULL
+          created_at timestamptz NOT NULL
         )
         SQL
 

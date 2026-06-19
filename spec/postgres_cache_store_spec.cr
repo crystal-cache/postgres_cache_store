@@ -11,6 +11,18 @@ describe Cache::PostgresCacheStore do
     store.should be_a(Cache::Store(String))
   end
 
+  it "creates created_at as timestamp with time zone" do
+    Cache::PostgresCacheStore(String).new(12.hours, pg)
+
+    column_type = pg.query_one(
+      "SELECT data_type FROM information_schema.columns WHERE table_name = $1 AND column_name = 'created_at'",
+      table_name,
+      as: String
+    )
+
+    column_type.should eq("timestamp with time zone")
+  end
+
   it "write to cache first time" do
     store = Cache::PostgresCacheStore(String).new(12.hours, pg)
 
