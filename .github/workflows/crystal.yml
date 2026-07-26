@@ -19,18 +19,15 @@ jobs:
 
       - name: Check format
         run: crystal tool format --check
+
   check_ameba:
     runs-on: ubuntu-latest
-    container: crystallang/crystal
     steps:
       - name: Check out repository code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v7
+      - name: Run Ameba linter
+        uses: crystal-ameba/github-action@master
 
-      - name: Install dependencies
-        run: shards install --ignore-crystal-version
-
-      - name: Check ameba
-        run: ./bin/ameba
   test:
     runs-on: ubuntu-latest
     strategy:
